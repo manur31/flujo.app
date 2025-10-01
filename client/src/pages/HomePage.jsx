@@ -30,14 +30,14 @@ const HomePage = () => {
       {/* Hero Section */}
       <section className="bg-[#1E293B] text-white flex flex-col items-center justify-center py-10 px-4 text-center">
         <h1 className="font-bold text-5xl pb-10">FLUJO</h1>
-        <h2 className="text-4xl md:text-5xl font-bold mb-4">
+        <h2 className="text-3xl md:text-4xl font-bold mb-4">
           Tu negocio, bajo control cada día
         </h2>
         <p className="text-lg md:text-xl mb-8 max-w-xl">
           Registra tus ventas y gastos en segundos, descarga tus reportes en PDF
           y mantén un control profesional desde tu celular.
         </p>
-        <div className="flex flex-col px-10 justify-center gap-6 w-full">
+        <div className="flex flex-col sm:flex-row sm:mt-4 px-10 justify-center items-center gap-6 w-full">
           <Button action={true} page={'/login'}>Ingresar a mi cuenta</Button>
             <Button page={'/register'}>Crear cuenta gratis</Button>
         </div>
@@ -68,7 +68,7 @@ const HomePage = () => {
         <p className="text-lg mb-8 max-w-xl mx-auto">
           Toma decisiones con información real y lleva tu negocio al siguiente nivel.
         </p>
-        <div className="flex flex-col px-10 justify-center gap-6 w-full">
+        <div className="flex flex-col sm:flex-row sm:mt-4 px-10 justify-center items-center gap-6 w-full">
           <Button action={true} page={'/login'}>Ingresar a mi cuenta</Button>
             <Button page={'/register'}>Crear cuenta gratis</Button>
         </div>
