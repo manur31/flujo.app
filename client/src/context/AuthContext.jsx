@@ -19,13 +19,13 @@ export const AuthProvider = ({children}) => {
         return storedUser ? JSON.parse(storedUser) : null;
     });
 
-    // hasta aqui
-
     // Sign Up
     const signUp = async (email, password, name, bussines) => {
         const {data: newUserData, error: newUserError} = await  supabase.auth.signUp({
             email: email,
             password: password,
+        }, {
+            redirectTo: 'http://localhost:5173/dashboard' 
         })
 
         if (newUserError) {

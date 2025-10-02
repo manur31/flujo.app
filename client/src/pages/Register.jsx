@@ -18,7 +18,7 @@ function Register() {
         try {
             const result = await signUp(email, password, name, bussines)
             console.log(result)
-            if (result?.success) {
+            if (result.success) {
                 navigate('/dashboard')
             }
         } catch (error) {

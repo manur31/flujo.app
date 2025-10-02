@@ -133,7 +133,7 @@ function FlujoVenta() {
                       Apregar producto
                     </DialogTitle>
                     <div className="mt-2">
-                      <ProductForm closeModal={() => setOpen(!open)} createProduct={createProduct}/>
+                      <ProductForm closeModal={() => setOpen(false)} createProduct={createProduct}/>
                     </div>
                   </div>
                 </div>
@@ -151,7 +151,7 @@ function FlujoVenta() {
                         <h3 className="truncate text-xl text-nowrap font-medium">Agregar producto</h3>
     
                             <span 
-                                onClick={() => setOpen(!open)} 
+                                onClick={() => setOpen(false)} 
                                 className="text-3xl cursor-pointer hover:scale-110 transition-transform"
                             >
                                 <FiPlusCircle />

@@ -8,8 +8,7 @@ function ProductForm({closeModal, createProduct}) {
         e.preventDefault()
         try {
             const result = await createProduct(name, price)
-            console.log(result)
-            closeModal
+            closeModal()
         } catch (error) {
             console.log(error)
         }

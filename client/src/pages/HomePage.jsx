@@ -1,5 +1,7 @@
-import React from "react";
+
+import { useNavigate } from "react-router";
 import Button from "../components/Button";
+import { useAuth } from "../context/AuthContext";
 
 const benefits = [
   {
@@ -25,6 +27,16 @@ const benefits = [
 ];
 
 const HomePage = () => {
+
+  const { session } = useAuth()
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (session?.user.user_metadata.email_verified) {
+        navigate('/dashboard')
+    }
+  },[session])
+
   return (
     <div className="min-h-screen flex flex-col">
       {/* Hero Section */}

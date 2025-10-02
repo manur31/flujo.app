@@ -3,7 +3,7 @@ import { useAuth } from '../context/AuthContext'
 import { useEffect, useState } from 'react'
 
 function Login() {
-    const {user, session, signIn} = useAuth()
+    const {session, signIn} = useAuth()
     const [email, setEmail] = useState()
     const [password, setPassword] = useState()
     const [loading, setLoading] = useState(false)
@@ -13,7 +13,6 @@ function Login() {
 
     useEffect(() => {
         setLoading(true)
-        console.log(user)
         if (session) {
             navigate('/dashboard')
         }
@@ -25,7 +24,6 @@ function Login() {
         setLoading(true)
         try {
             const result = await signIn(email, password)
-            console.log(result)
             if (result?.success) {
                 navigate('/dashboard')
             }

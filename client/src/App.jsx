@@ -22,7 +22,7 @@ function App() {
           <SaleProvider>
             <BrowserRouter>
               <Routes>
-                <Route path={'/'} element={<HomePage/>}/>
+                <Route path={'/' || '#'} element={<HomePage/>}/>
                 <Route path={'/login'} element={<Login/>}/>
                 <Route path={'/register'} element={<Register/>}/>
                 <Route element={<ProtectedRoute/>}>
