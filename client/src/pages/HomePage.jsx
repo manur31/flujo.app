@@ -2,6 +2,7 @@
 import { useNavigate } from "react-router";
 import Button from "../components/Button";
 import { useAuth } from "../context/AuthContext";
+import { useEffect } from "react";
 
 const benefits = [
   {
