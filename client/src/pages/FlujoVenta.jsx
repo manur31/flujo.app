@@ -1,4 +1,4 @@
-import { FiPlusCircle, FiShoppingCart } from "react-icons/fi"
+import { FiMoreVertical, FiPlusCircle, FiShoppingCart } from "react-icons/fi"
 import Button from "../components/Button"
 import { useProduct } from "../context/ProductContext"
 import { useEffect, useState } from "react"
@@ -164,12 +164,12 @@ function FlujoVenta() {
                     return (
                         <article 
                             key={product.id} 
-                            className="grid grid-cols-[1fr_80px_50px] w-full gap-3 border-4 border-[#3B82F6] rounded-xl px-6 py-4 items-center h-fit"
+                            className="grid grid-cols-[1fr_80px_30px] w-full gap-3 border-4 border-[#3B82F6] rounded-xl px-6 py-4 items-center h-fit"
                         >
                             <h3 className="truncate text-xl text-nowrap font-medium">{product.product_name}</h3>
                             <p className="text-lg font-medium">RD$ {product.price}</p>
         
-                            <div className="flex items-center gap-2">
+                            <div className="flex gap-2 items-center  w-full">
                                 {saleItem?.amount > 0 && (
                                     <span className="text-lg font-semibold text-[#3B82F6]">
                                     x{saleItem.amount}
