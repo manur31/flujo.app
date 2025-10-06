@@ -1,4 +1,4 @@
-import { FiMoreVertical, FiPlusCircle, FiShoppingCart } from "react-icons/fi"
+import { FiMinusCircle, FiMoreVertical, FiPlusCircle, FiShoppingCart } from "react-icons/fi"
 import Button from "../components/Button"
 import { useProduct } from "../context/ProductContext"
 import { useEffect, useState } from "react"
@@ -18,8 +18,9 @@ function FlujoVenta() {
     const [total, setTotal] = useState(null)
     const [open, setOpen] = useState(false)
     const [isOpen, setIsOpen] = useState(false)
-    // const [ filterProducts, setFilterProducts] = useState([])
     const [search, setSearch] = useState('')
+    const [error, setError] = useState(null)
+    const [showError, setShowError] = useState(false)
 
     useEffect(() => {
         getProducts()
@@ -57,7 +58,30 @@ function FlujoVenta() {
         });
     };
 
+
+    const removeSale = (product) => {
+      setSales(prevSales => {
+        const existingItem = prevSales.find(sale => sale.name === product.product_name);
+
+        if (existingItem) {
+          if (existingItem.amount > 1) {
+            return prevSales.map(sale =>
+              sale.name === product.product_name
+                ? { ...sale, amount: sale.amount - 1 }
+                : sale
+            );
+          } else {
+            return prevSales.filter(sale => sale.name !== product.product_name);
+          }
+        }
+        
+        return prevSales;
+      });
+    };
+
+
     const handleClick = async () => {
+      if (sales.length === 0) return (setError('Debes agregar productos al carrito'), setShowError(true))
       try {
             await createSale(sales, total)
             setSales([])
@@ -72,6 +96,14 @@ function FlujoVenta() {
         const newTotal = sales.reduce((acc, sale) => acc + sale.unit_price * sale.amount, 0);
         setTotal(newTotal);
     }, [sales]);
+
+    useEffect(() => {
+        if (error) {
+            setTimeout(() => {
+                setError(null)
+            }, 3000)
+        }
+    },[error])
 
 
   return (
@@ -151,7 +183,7 @@ function FlujoVenta() {
                         <h3 className="truncate text-xl text-nowrap font-medium">Agregar producto</h3>
     
                             <span 
-                                onClick={() => setOpen(false)} 
+                                onClick={() => setOpen(!open)} 
                                 className="text-3xl cursor-pointer hover:scale-110 transition-transform"
                             >
                                 <FiPlusCircle />
@@ -164,34 +196,50 @@ function FlujoVenta() {
                     return (
                         <article 
                             key={product.id} 
-                            className="grid grid-cols-[1fr_80px_30px] w-full gap-3 border-4 border-[#3B82F6] rounded-xl px-6 py-4 items-center h-fit"
+                            className="grid grid-cols-[1fr_60px_20px] relative w-full gap-3 border-4 border-[#3B82F6] rounded-xl px-4 py-2 items-center h-fit"
                         >
-                            <h3 className="truncate text-xl text-nowrap font-medium">{product.product_name}</h3>
-                            <p className="text-lg font-medium">RD$ {product.price}</p>
+                            <h3 className="truncate pl-4 text-xl text-nowrap font-medium">{product.product_name}</h3>
+                            <section className="flex flex-col items-center">
+                              <p className="text-sm font-medium">RD$</p>
+                              <h4 className="text-lg font-medium">{product.price}</h4>
+                            </section>
         
-                            <div className="flex gap-2 items-center  w-full">
-                                {saleItem?.amount > 0 && (
-                                    <span className="text-lg font-semibold text-[#3B82F6]">
-                                    x{saleItem.amount}
-                                    </span>
-                                )}
-                                <span 
-                                    onClick={() => addSale(product)} 
-                                    className="text-3xl cursor-pointer hover:scale-110 transition-transform"
-                                >
-                                    <FiPlusCircle />
+                            <div className="flex flex-col gap-2 items-center w-full">
+                              {saleItem?.amount > 0 && (
+                                <span className="text-lg absolute top-[50%] translate-[-50%] left-4 font-semibold text-[#3B82F6]">
+                                  {saleItem.amount}
                                 </span>
+                              )}
+                              <span 
+                                onClick={() => addSale(product)} 
+                                className="text-3xl cursor-pointer hover:scale-110 transition-transform"
+                              >
+                                <FiPlusCircle />
+                              </span>
+
+                              {saleItem?.amount > 0 && (
+                                <span 
+                                  onClick={() => removeSale(product)}
+                                  className="text-3xl cursor-pointer hover:scale-110 transition-transform text-red-500"
+                                >
+                                  <FiMinusCircle />
+                                </span>
+                              )}
                             </div>
+
                         </article>
                     );   
                     }))}
             
         </section>
-        <section className="flex gap-4 w-full relative mt-2">
+          {error && <p className='text-red-500 text-center text-xl'>{error}</p>}
+        <section className="flex flex-col gap-2 w-full relative">
+          <article className="flex gap-4">
             <Button page="/dashboard">Cancelar</Button>
             <button onClick={handleClick} className='bg-[#06B6D4] hover:bg-[#19616d] text-white px-4 py-2 rounded-xl w-full'>
                     Vender
             </button>
+          </article>
         </section>
     </main>
   )

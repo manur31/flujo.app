@@ -4,11 +4,11 @@ import { useNavigate } from 'react-router'
 import { useExpense } from '../context/ExpensesContext'
 
 function FlujoGasto() {
-    const { expenses, createExpense } = useExpense()
+    const { createExpense } = useExpense()
     const navigate = useNavigate()
 
     const [name, setName] = useState('')
-    const [amount, setAmount] = useState(0)
+    const [amount, setAmount] = useState(1)
     const [unit_price, setUnit_price] = useState(0)
 
     const handleSubmit = async (e) => {

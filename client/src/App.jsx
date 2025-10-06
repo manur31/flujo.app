@@ -11,6 +11,7 @@ import { ExpenseProvider } from "./context/ExpensesContext"
 import { SaleProvider } from "./context/SalesContext"
 import ProtectedRoute from "./ProtectedRoute"
 import HomePage from "./pages/HomePage"
+import { ClousingProvider } from "./context/ClousingContext"
 
 function App() {
 
@@ -20,19 +21,21 @@ function App() {
       <ProductProvider>
         <ExpenseProvider>
           <SaleProvider>
-            <BrowserRouter>
-              <Routes>
-                <Route path={'/' || '#'} element={<HomePage/>}/>
-                <Route path={'/login'} element={<Login/>}/>
-                <Route path={'/register'} element={<Register/>}/>
-                <Route element={<ProtectedRoute/>}>
-                  <Route path={'/dashboard'} element={<Dashboard/>}/>
-                  <Route path={'/venta'} element={<FlujoVenta/>}/>
-                  <Route path={'/gasto'} element={<FlujoGasto/>}/>
-                  <Route path={'/profile'} element={<Profile/>}/>
-                </Route>
-              </Routes>
-            </BrowserRouter>
+            <ClousingProvider>
+              <BrowserRouter>
+                <Routes>
+                  <Route path={'/' || '#'} element={<HomePage/>}/>
+                  <Route path={'/login'} element={<Login/>}/>
+                  <Route path={'/register'} element={<Register/>}/>
+                  <Route element={<ProtectedRoute/>}>
+                    <Route path={'/dashboard'} element={<Dashboard/>}/>
+                    <Route path={'/venta'} element={<FlujoVenta/>}/>
+                    <Route path={'/gasto'} element={<FlujoGasto/>}/>
+                    <Route path={'/profile'} element={<Profile/>}/>
+                  </Route>
+                </Routes>
+              </BrowserRouter>
+            </ClousingProvider>
           </SaleProvider>
         </ExpenseProvider>
       </ProductProvider>

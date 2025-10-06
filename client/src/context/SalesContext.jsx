@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useEffect, useState } from 'react'
+import { createContext, useContext, useState } from 'react'
 import { supabase } from '../supabaseClient'
 import { useAuth } from './AuthContext'
 
@@ -46,10 +46,6 @@ export const SaleProvider = ({children}) => {
             console.log(error)
         }
     }
-
-    useEffect(() => {
-        getSales()
-    },[])
 
     return (
         <SaleContext.Provider value={{
