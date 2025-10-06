@@ -21,6 +21,7 @@ export const ProductProvider = ({children}) => {
 
     const getProducts = async () => {
         setLoading(true)
+
         try {
             const { data, error } = await supabase.from('products')
             .select()

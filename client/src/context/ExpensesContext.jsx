@@ -19,10 +19,19 @@ export const ExpenseProvider = ({children}) => {
     const [expenses, setExpenses] = useState()
 
     const getExpenses = async () => {
+
+        const startOfDay = new Date();
+        startOfDay.setHours(0, 0, 0, 0);
+
+        const endOfDay = new Date();
+        endOfDay.setHours(23, 59, 59, 999);
+
         const { data, error } = await supabase
         .from('expenses')
         .select()
         .eq('user_id', user?.user_id)
+        .gte("created_at", startOfDay.toISOString())
+        .lte("created_at", endOfDay.toISOString())
 
         if (error) {
             throw error

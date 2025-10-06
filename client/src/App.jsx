@@ -12,6 +12,7 @@ import { SaleProvider } from "./context/SalesContext"
 import ProtectedRoute from "./ProtectedRoute"
 import HomePage from "./pages/HomePage"
 import { ClousingProvider } from "./context/ClousingContext"
+import ClousersPage from "./pages/ClousersPage"
 
 function App() {
 
@@ -29,6 +30,7 @@ function App() {
                   <Route path={'/register'} element={<Register/>}/>
                   <Route element={<ProtectedRoute/>}>
                     <Route path={'/dashboard'} element={<Dashboard/>}/>
+                    <Route path={'/clousers'} element={<ClousersPage/>}/>
                     <Route path={'/venta'} element={<FlujoVenta/>}/>
                     <Route path={'/gasto'} element={<FlujoGasto/>}/>
                     <Route path={'/profile'} element={<Profile/>}/>

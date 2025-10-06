@@ -11,6 +11,7 @@ import { useExpense } from '../context/ExpensesContext'
 import { useSale } from '../context/SalesContext'
 import Transations from '../components/Transations'
 import { useClousing } from '../context/ClousingContext'
+import { Link } from 'react-router'
 
 function Dashboard() {
 
@@ -95,12 +96,14 @@ function Dashboard() {
             <section className='flex flex-col items-center relative p-14'>
                 <p className='text-lg font-medium'> {dailyTotal === 0 || dailyTotal === isNaN ? 'Aun no vendes' : `RD$ ${dailyTotal}`}</p>
                 <p className='text-sm'>Total del dia</p>
-                <div className=' absolute top-0 left-0 w-full h-full flex items-center justify-center'>
-                    <PieChart width={300} height={300}>
-                        <Pie data={chartData} dataKey='value' nameKey='name' cx='50%' cy='50%' outerRadius={85} innerRadius={70} fill='#06B6D4'/>
-                        <Tooltip/>
-                    </PieChart>
-                </div>
+                <Link to={'/clousers'}>
+                    <div className=' absolute top-0 left-0 w-full h-full flex items-center justify-center'>
+                        <PieChart width={300} height={300}>
+                            <Pie data={chartData} dataKey='value' nameKey='name' cx='50%' cy='50%' outerRadius={85} innerRadius={70} fill='#06B6D4'/>
+                            <Tooltip/>
+                        </PieChart>
+                    </div>
+                </Link>
             </section>
             <section className='flex items-center gap-10 mb-4 justify-center'>
                 <article className='flex flex-col items-center'>
