@@ -22,9 +22,15 @@ function Header() {
         <article className={`bg-[#000000b9] ${isOpen ? 'flex' : 'hidden'} absolute left-0 top-0 w-full h-dvh`}>
             <section className="flex flex-col gap-4 items-center pt-16 pb-8 px-10 bg-white dark:bg-[#1E293B] w-full h-fit">
                 {session ? (
-                        <Link to={'/profile'}>
-                            <h3>{user?.user_name}</h3>
-                        </Link>
+                        <article className="flex flex-col gap-4 items-center">
+                            <Link to={'/profile'}>
+                                <h3 className="text-2xl">{user?.user_name}</h3>
+                            </Link>
+                            <Link to={'/clousers'}>
+                                <h3 className="text-xl">Estadísticas</h3>
+                            </Link>
+                        </article>
+
                     ) : (
                         <article className="flex gap-4 mt-4">
                             <Button page="/register">
