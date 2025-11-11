@@ -1,4 +1,4 @@
-import { FiMinusCircle, FiMoreVertical, FiPlusCircle, FiShoppingCart } from "react-icons/fi"
+import { FiMinusCircle, FiPlusCircle, FiShoppingCart } from "react-icons/fi"
 import Button from "../components/Button"
 import { useProduct } from "../context/ProductContext"
 import { useEffect, useState } from "react"
@@ -7,6 +7,8 @@ import ProductForm from "../components/ProductForm"
 import SaleCard from "../components/SaleCard"
 import { useSale } from "../context/SalesContext"
 import { useNavigate } from "react-router"
+import { toast } from 'sonner'
+import { Toaster } from '../components/ui/sonner'
 
 function FlujoVenta() {
 
@@ -51,6 +53,7 @@ function FlujoVenta() {
                     name: product?.product_name,
                     unit_price: product?.price,
                     amount: 1,
+                    id: product?.id,
                     created_at: new Date().toISOString()
                 }
             ];
@@ -86,7 +89,15 @@ function FlujoVenta() {
             await createSale(sales, total)
             setSales([])
             setTotal(null)
-            navigate('/dashboard')
+            toast.success('La venta se agrego correctamente', {
+              action: {
+              label: "Ir al panel", 
+              onClick: () => navigate('/dashboard')
+              }, 
+              className: {
+                  actionButton: 'action-button',
+              }
+            })
         } catch (error) {
             console.log(error)
         }
@@ -107,7 +118,7 @@ function FlujoVenta() {
 
 
   return (
-    <main className="grid grid-rows-[60px_90px_1fr_50px] justify-center pt-8 pb-6 h-dvh w-full dark:bg-[#1E293B] dark:text-white">
+    <main className="grid grid-rows-[60px_90px_1fr_50px] justify-center pt-8 pb-6 h-dvh w-full bg-[#1E293B] text-white">
         <header className="relative w-full">
             <h2 className="text-4xl text-[#3B82F6] text-center font-bold">FlujoVenta</h2>
             <span className={`absolute top-0 right-0 ${sales.length === 0 ? 'hidden' : 'flex'} size-6 bg-white text-black items-center justify-center rounded-full`}>{sales.length}</span>
@@ -144,7 +155,7 @@ function FlujoVenta() {
       </Dialog>
         </header>
         <section className="flex flex-col gap-2 w-full">
-            <input type="text" onChange={e => setSearch(e.target.value)} placeholder="Buscar producto..." className="text-xl px-6 py-2 w-full border-2 border-[#3B82F6] rounded-2xl"/>
+            <input type="text" onChange={e => setSearch(e.target.value)} placeholder="Buscar producto..." className="text-xl px-6 py-2 w-full border-2 border-[#3B82F6] text-neutral-200 rounded-2xl"/>
             <p onClick={() => setOpen(true)} className={`pl-4 ${products.length === 0 ? 'hidden' : 'flex'}`}>Agregar nuevo producto...</p>
             <Dialog open={open} onClose={setOpen} className="relative z-10">
         <DialogBackdrop
@@ -175,7 +186,7 @@ function FlujoVenta() {
         </div>
       </Dialog>
         </section>
-        <section className="grid grid-cols-1 gap-4 overflow-scroll h-96 mt-4">
+        <section className="grid grid-cols-1 gap-4 overflow-scroll h-96 my-2">
             {products.length === 0 ? (
                 <article 
                         className="flex items-center w-full h-fit gap-3 border-4 border-[#3B82F6] rounded-xl px-6 py-4"
@@ -234,13 +245,14 @@ function FlujoVenta() {
         </section>
           {error && <p className='text-red-500 text-center text-xl'>{error}</p>}
         <section className="flex flex-col gap-2 w-full relative">
-          <article className="flex gap-4">
+          <article className="flex gap-4 mt-2">
             <Button page="/dashboard">Cancelar</Button>
             <button onClick={handleClick} className='bg-[#06B6D4] hover:bg-[#19616d] text-white px-4 py-2 rounded-xl w-full'>
                     Vender
             </button>
           </article>
         </section>
+        <Toaster/>
     </main>
   )
 }

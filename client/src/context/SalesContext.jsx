@@ -51,16 +51,50 @@ export const SaleProvider = ({children}) => {
             }
 
             setSales([...sales, data])
+            console.log(data)
         } catch (error) {
             console.log(error)
         }
+    }
+
+    const updateSale = async (id, updateFields, total) => {
+        console.log(id, updateFields, total)
+        const { data, error } = await supabase.from('sales')
+        .update({products: updateFields, total: total})
+        .eq('user_id', user?.user_id)
+        .eq('id', id)
+        .select()
+
+        if (error) {
+            throw error
+        }
+
+        // setSales(sales.filter(sale => sale.id !== id))
+        return (data)
+    }
+
+    const deleteSale = async (id) => {
+        console.log(id)
+        const { error } = await supabase.from('sales')
+        .delete()
+        .eq('user_id', user?.user_id)
+        .eq('id', id)
+        .select()
+
+        if (error) {
+            return error
+        }
+
+        setSales(sales.filter(sale => sale.id !== id))
     }
 
     return (
         <SaleContext.Provider value={{
                 sales, 
                 getSales, 
-                createSale
+                createSale,
+                deleteSale,
+                updateSale
             }}>
             {children}
         </SaleContext.Provider>

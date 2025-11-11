@@ -16,14 +16,14 @@ import { Link } from 'react-router'
 function Dashboard() {
 
     const { getProducts } = useProduct()
-    const { expenses, getExpenses } = useExpense()
-    const { sales, getSales } = useSale()
-    const { createClousing } = useClousing()
+    const { expenses, getExpenses, deleteExpense } = useExpense()
+    const { sales, getSales, updateSale, deleteSale } = useSale()
+    const { createClousing, getClousings, clousings } = useClousing()
     const [ sold, setSold ] = useState([])
     const [transations, setTransations] = useState()
     const [ dailyTotal, setDailyTotal] = useState()
-    const [ salesItems, setSalesItems] = useState()
-    const [ expensesItems, setExpensesItems ] = useState()
+    const [ salesItems, setSalesItems] = useState(0)
+    const [ expensesItems, setExpensesItems ] = useState(0)
 
      useEffect(() => {
         getProducts()  
@@ -45,7 +45,15 @@ function Dashboard() {
 
     useEffect(() => {
         if (sales) {
-            const soldProducts = sales.map(sale => sale.products).flat()
+            const updatedSale = sales?.map(sale => ({
+                ...sale, 
+                products: sale?.products?.map(product => ({
+                    ...product,
+                    saleId: sale?.id
+                }))
+            }))
+
+            const soldProducts = updatedSale.map(sale => sale.products).flat()
             setSold(soldProducts)
         }
     }, [sales])
@@ -69,6 +77,7 @@ function Dashboard() {
             setExpensesItems(totalIncome(expenses))
         }
 
+        
         setDailyTotal(salesItems - expensesItems)
     },[sold, expenses])
 
@@ -86,15 +95,13 @@ function Dashboard() {
         }
     ]
 
-    console.log(transations)
-
   return (
-    <main className='bg-white dark:bg-[#1E293B] dark:text-white h-dvh'>
+    <main className='bg-[#1E293B] text-white h-dvh'>
         <Header/>
         <article className='flex flex-col gap-4'>
-            <h4 className='text-xl uppercase text-center font-bold pt-2'>Resumen del dia</h4>
+            <h4 className='text-xl uppercase text-center font-bold '>Resumen del dia</h4>
             <section className='flex flex-col items-center relative p-14'>
-                <p className='text-lg font-medium'> {dailyTotal === 0 || dailyTotal === isNaN ? 'Aun no vendes' : `RD$ ${dailyTotal}`}</p>
+                <p className='text-lg font-medium'> {dailyTotal === 0 || Number.isNaN(dailyTotal) ? 'Aun no vendes' : `RD$ ${dailyTotal}`}</p>
                 <p className='text-sm'>Total del dia</p>
                 <Link to={'/clousers'}>
                     <div className=' absolute top-0 left-0 w-full h-full flex items-center justify-center'>
@@ -122,8 +129,8 @@ function Dashboard() {
                 </article>
             </section>
         </article>
-        <Transations data={transations} createClousing={createClousing}/>
-        <article className='flex gap-2 mx-10 py-4'>
+        <Transations data={transations} createClousing={createClousing} sales={sales} updateSale={updateSale} deleteSale={deleteSale} deleteExpense={deleteExpense} totalIncome={totalIncome} getClousings={getClousings} clousings={clousings}/>
+        <article className='flex gap-4 mx-8 mb-10 py-4'>
             <Button page='/gasto'>Gasto</Button>
             <Button page='/venta' action={true}>Ingreso</Button>
         </article>

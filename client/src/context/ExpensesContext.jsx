@@ -52,7 +52,7 @@ export const ExpenseProvider = ({children}) => {
             }).select()
 
             if (error) {
-                throw error
+                return error
             }
 
             setExpenses(expenses, ...data)
@@ -61,11 +61,26 @@ export const ExpenseProvider = ({children}) => {
         }
     }
 
+    const deleteExpense = async (id) => {
+        const { error } = await supabase.from('expenses')
+        .delete()
+        .eq('user_id', user?.user_id)
+        .eq('id', id)
+        .select()
+
+        if (error) {
+            return error
+        }
+
+        setExpenses(expenses.filter(expense => expense.id !== id))
+    }
+
     return (
         <ExpensesContext.Provider value={{
                 expenses, 
                 getExpenses,
-                createExpense
+                createExpense,
+                deleteExpense
             }}>
             {children}
         </ExpensesContext.Provider>

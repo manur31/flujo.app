@@ -10,7 +10,7 @@ function Header() {
     const [isOpen, setIsOpen] = useState(false)
 
   return (
-    <header className="flex justify-between sticky top-0 left-0 bg-white dark:bg-[#1E293B] dark:text-white items-center px-8 py-6 z-10">
+    <header className="flex justify-between sticky top-0 left-0 bg-[#1E293B] text-white items-center px-8 py-4 z-10">
         <Link to={'/dashboard'}>
             <h1 className="text-3xl font-bold uppercase">Flujo</h1>
         </Link>
@@ -20,7 +20,7 @@ function Header() {
             </article>
         </section>
         <article className={`bg-[#000000b9] ${isOpen ? 'flex' : 'hidden'} absolute left-0 top-0 w-full h-dvh`}>
-            <section className="flex flex-col gap-4 items-center pt-16 pb-8 px-10 bg-white dark:bg-[#1E293B] w-full h-fit">
+            <section className="flex flex-col gap-4 items-center pt-16 pb-8 px-10 bg-[#1E293B] w-full h-fit">
                 {session ? (
                         <article className="flex flex-col gap-4 items-center">
                             <Link to={'/profile'}>
