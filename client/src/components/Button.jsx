@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router'
 
-function Button({children, page, action=false}, onclick) {
+function Button({children, page, action=false, onclick, disabled}) {
     const navigate = useNavigate()
 
     const handleclick = () => {
@@ -12,7 +12,7 @@ function Button({children, page, action=false}, onclick) {
     }
 
   return (
-    <button onClick={handleclick} type='button' className={`w-full sm:w-fit justify-center flex items-center text-nowrap px-4 py-2 ${action ? 'bg-[#06B6D4] hover:bg-[#19616d]' : 'bg-[#3B82F6] hover:bg-[#121e3b]'}  text-white rounded-xl  cursor-pointer`}>
+    <button onClick={handleclick} disabled={disabled} type='button' className={`w-full sm:w-fit justify-center flex items-center text-nowrap px-4 py-2 ${action ? 'bg-[#06B6D4] hover:bg-[#19616d]' : 'bg-[#3B82F6] hover:bg-[#121e3b]'} disabled:opacity-70 text-white rounded-xl  cursor-pointer`}>
         {children}
     </button>
   )

@@ -1,3 +1,9 @@
+import { useEffect, useState } from 'react'
+import { Link } from 'react-router'
+import { useProduct } from '../context/ProductContext'
+import { useExpense } from '../context/ExpensesContext'
+import { useSale } from '../context/SalesContext'
+import { useClousing } from '../context/ClousingContext'
 import Header from '../components/Header'
 import Button from '../components/Button'
 import {
@@ -5,45 +11,33 @@ import {
     PieChart,
     Pie
 } from 'recharts'
-import { useProduct } from '../context/ProductContext'
-import { useEffect, useState } from 'react'
-import { useExpense } from '../context/ExpensesContext'
-import { useSale } from '../context/SalesContext'
 import Transations from '../components/Transations'
-import { useClousing } from '../context/ClousingContext'
-import { Link } from 'react-router'
+import { Spinner } from '../components/ui/spinner'
 
 function Dashboard() {
-
     const { getProducts } = useProduct()
-    const { expenses, getExpenses, deleteExpense } = useExpense()
-    const { sales, getSales, updateSale, deleteSale } = useSale()
-    const { createClousing, getClousings, clousings } = useClousing()
-    const [ sold, setSold ] = useState([])
+    const { expenses, getExpenses } = useExpense()
+    const { sales, getSales } = useSale()
+    const { getClousings, clousings, createClousing } = useClousing()
+
+    const [sold, setSold] = useState([])
     const [transations, setTransations] = useState()
-    const [ dailyTotal, setDailyTotal] = useState()
-    const [ salesItems, setSalesItems] = useState(0)
-    const [ expensesItems, setExpensesItems ] = useState(0)
+    const [dailyTotal, setDailyTotal] = useState()
+    const [salesItems, setSalesItems] = useState(0)
+    const [expensesItems, setExpensesItems ] = useState(0)
+    const [loading, setLoading] = useState(false)
+    const [haveClouse, setHaveClouse] = useState(null)
+    const [day, setDay] = useState('')
 
      useEffect(() => {
         getProducts()  
         getExpenses()  
         getSales()
+        getClousings()
     },[])
 
     useEffect(() => {
-        const merged = [
-            ...(sold || []),
-            ...(expenses || [])
-        ]
-        const sorted = merged.sort(
-            (a, b) => new Date(b.created_at) - new Date(a.created_at)
-        )
-        setTransations(sorted)
-    }, [sold, expenses])
-
-
-    useEffect(() => {
+        setLoading(true)
         if (sales) {
             const updatedSale = sales?.map(sale => ({
                 ...sale, 
@@ -56,20 +50,48 @@ function Dashboard() {
             const soldProducts = updatedSale.map(sale => sale.products).flat()
             setSold(soldProducts)
         }
+        setLoading(false)
     }, [sales])
 
+    const date = new Date()
+
+    useEffect(() => {
+        setDay(date.toLocaleDateString("es-MX",{ day:'numeric', month:'long', year:'numeric' }))
+        if (day) {
+            const filteredClouse = clousings.filter(clouse => clouse.day === day)
+            if (filteredClouse.length > 0) {
+                setHaveClouse(true)
+            }
+        }
+        if (haveClouse === null) {
+            getClousings()
+        }
+    }, [clousings])
+
+    useEffect(() => {
+        const merged = [
+            ...(sold || []),
+            ...(expenses || [])
+        ]
+        const sorted = merged.sort(
+            (a, b) => new Date(b.created_at) - new Date(a.created_at)
+        )
+        setTransations(sorted)
+    }, [sold, expenses])
 
     const totalIncome = (income = []) => {
         let incomeFinal = 0
-        for (let i = 0; income?.length > i; i++) {
-            let incomePrevio = income[i]?.unit_price * income[i]?.amount
-            incomeFinal += incomePrevio
+        if (income.length !== 0) {
+            for (let i = 0; income?.length > i; i++) {
+                let incomePrevio = income[i]?.unit_price * income[i]?.amount
+                incomeFinal += incomePrevio
+            }
         }
-
         return incomeFinal
     }
 
     useEffect(() => {
+        setLoading(true)
         if (sold?.length > 0) {
             setSalesItems(totalIncome(sold))
         }
@@ -77,10 +99,9 @@ function Dashboard() {
             setExpensesItems(totalIncome(expenses))
         }
 
-        
         setDailyTotal(salesItems - expensesItems)
-    },[sold, expenses])
-
+        setLoading(false)
+    },[sold, expenses, transations])
 
     const chartData = [
         {
@@ -101,7 +122,11 @@ function Dashboard() {
         <article className='flex flex-col gap-4'>
             <h4 className='text-xl uppercase text-center font-bold '>Resumen del dia</h4>
             <section className='flex flex-col items-center relative p-14'>
-                <p className='text-lg font-medium'> {dailyTotal === 0 || Number.isNaN(dailyTotal) ? 'Aun no vendes' : `RD$ ${dailyTotal}`}</p>
+                <p className='text-lg font-medium'> {
+                    loading ? (<Spinner className='size-8'/>) : (
+                        dailyTotal === 0 || Number.isNaN(dailyTotal) ? 'Aun no vendes' : `RD$ ${dailyTotal}`
+                    )
+                }</p>
                 <p className='text-sm'>Total del dia</p>
                 <Link to={'/clousers'}>
                     <div className=' absolute top-0 left-0 w-full h-full flex items-center justify-center'>
@@ -129,10 +154,10 @@ function Dashboard() {
                 </article>
             </section>
         </article>
-        <Transations data={transations} createClousing={createClousing} sales={sales} updateSale={updateSale} deleteSale={deleteSale} deleteExpense={deleteExpense} totalIncome={totalIncome} getClousings={getClousings} clousings={clousings}/>
+        <Transations data={transations} haveClouse={haveClouse} createClousing={createClousing}/>
         <article className='flex gap-4 mx-8 mb-10 py-4'>
-            <Button page='/gasto'>Gasto</Button>
-            <Button page='/venta' action={true}>Ingreso</Button>
+            <Button page='/gasto' disabled={haveClouse}>Gasto</Button>
+            <Button page='/venta' action={true} disabled={haveClouse}>Ingreso</Button>
         </article>
 
     </main>

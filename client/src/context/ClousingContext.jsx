@@ -15,7 +15,6 @@ export const ClousingProvider = ({children}) => {
 
     const { user } = useAuth()
     const [clousings, setClousings] = useState([])
-    const [error, setError] = useState(false)
 
     const getClousings = async () => {
         const { data, error } = await supabase

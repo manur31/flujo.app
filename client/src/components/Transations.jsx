@@ -1,14 +1,21 @@
 import { useEffect, useState } from 'react'
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
-import { FiLock, FiShare, FiMoreVertical, FiTrash2, FiClipboard } from 'react-icons/fi';
+import { FiLock, FiShare, FiMoreVertical, FiTrash2 } from 'react-icons/fi';
 import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react'
 import { useAuth } from '../context/AuthContext';
 import { toast } from 'sonner'
 import { Toaster } from '../components/ui/sonner'
 import { Spinner } from '../components/ui/spinner'
+import { useExpense } from '../context/ExpensesContext';
+import { useSale } from '../context/SalesContext';
 
-function Transations({data, createClousing, sales, updateSale, deleteSale, deleteExpense, totalIncome,getClousings, clousings}) {
+function Transations({data, haveClouse,createClousing}) {
+
+    const { deleteExpense } = useExpense()
+    const { deleteSaleProduct } = useSale()
+
+
     const [normalized, setNormalized] = useState([])
     const [day, setDay] = useState('')
     const [open, setOpen] = useState(false)
@@ -16,7 +23,6 @@ function Transations({data, createClousing, sales, updateSale, deleteSale, delet
     const [openItem, setOpenItem] = useState(false)
     const [currentItem, setCurrentItem] = useState(null)
     const [loading, setLoading] = useState(false)
-    const [haveClouse, setHaveClouse] = useState(null)
     const { user } = useAuth()
 
     const date = new Date()
@@ -34,13 +40,6 @@ function Transations({data, createClousing, sales, updateSale, deleteSale, delet
 
         setDay(date.toLocaleDateString("es-MX",{ day:'numeric', month:'long', year:'numeric' }))
     },[data])
-
-    useEffect(() => {
-        getClousings()
-        setHaveClouse(clousings.some(clouse => {
-            clouse.day === day
-        }))
-    }, [clousings])
 
     const generatePDF = () => {
         const doc = new jsPDF();
@@ -82,12 +81,12 @@ function Transations({data, createClousing, sales, updateSale, deleteSale, delet
 
         doc.save(`${user?.bussines_name}-${day}-reporte.pdf`);
         setIsOpen(!isOpen)
+        toast.success('PDF generado con exito');
     };
 
     const handleClick = () => {
         createClousing(normalized, day)
         toast.success(`El cierre de ${day} se realizo correctamente`)
-        setHaveClouse(true)
         setOpen(!open)
     }
 
@@ -103,52 +102,19 @@ function Transations({data, createClousing, sales, updateSale, deleteSale, delet
                 })
             } else if (result) {
                 toast.error(`Hubo un error al eliminar ${name}`)
+            } 
+        } else {
+            try {
+                await deleteSaleProduct(saleId, id);
+                toast.success(`${name} eliminado correctamente`);
+            } catch (error) {
+                console.error('Error:', error);
+                toast.error(`Error al eliminar ${name}`);
             }
-
-            setLoading(false)
-            setOpenItem(!openItem)
         }
 
-        const filteredSale = sales.filter(sale => sale.id === saleId)
-
-        if (filteredSale && filteredSale != []) {
-            if (filteredSale[0]?.products?.length >= 2) {
-                const filteredProduct = filteredSale[0]?.products.filter(product => product.id !== id)
-                const total = totalIncome(filteredProduct)
-
-                if (filteredProduct) {
-                    console.log(filteredProduct)
-                    const result = await updateSale(filteredSale[0]?.id, filteredProduct, total)
-                    console.log(result)
-                    if (result.length > 0) {
-                        toast.success(`${filteredProduct[0]?.name} se elimino correctamente`, { 
-                            className: {
-                                actionButton: 'action-button',
-                            }
-                        })
-                    } else if (result) {
-                        console.log(result)
-                        toast.error(`Hubo un error al eliminar ${name}`)
-                    }
-                }
-            } else if (filteredSale[0]?.products[0].id === id) {
-                const result = await deleteSale(filteredSale[0]?.id)
-
-                if (!result) {
-                    toast.success(`${filteredSale[0]?.products[0].name} ${name} se elimino correctamente`, { 
-                        className: {
-                            actionButton: 'action-button',
-                        }
-                    })
-                } else if (result) {
-                    console.log(result)
-                    toast.error(`Hubo un error al eliminar ${name}`)
-                }
-
-            }
-            setLoading(false)
-            setOpenItem(!openItem)
-        }
+        setLoading(false)
+        setOpenItem(!openItem)
     }
     
   return (
@@ -173,7 +139,7 @@ y
                                 <div className="bg-gray-800 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                                     <div className="sm:flex sm:items-start">
                                         {
-                                            haveClouse ? (
+                                            !haveClouse ? (
                                                 <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
                                             <DialogTitle as="h3" className="font-semibold text-white text-3xl">
                                             Confirmar cierre

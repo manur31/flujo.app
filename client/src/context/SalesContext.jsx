@@ -51,30 +51,41 @@ export const SaleProvider = ({children}) => {
             }
 
             setSales([...sales, data])
-            console.log(data)
         } catch (error) {
             console.log(error)
         }
     }
 
     const updateSale = async (id, updateFields, total) => {
-        console.log(id, updateFields, total)
-        const { data, error } = await supabase.from('sales')
-        .update({products: updateFields, total: total})
-        .eq('user_id', user?.user_id)
-        .eq('id', id)
-        .select()
+        try {
+            const { data, error } = await supabase
+                .from('sales')
+                .update({
+                    products: updateFields,
+                    total: total
+                })
+                .eq('user_id', user?.user_id)
+                .eq('id', id)
+                .select();
 
-        if (error) {
-            throw error
+            if (error) {
+                throw error;
+            }
+
+            setSales(sales => 
+                sales.map(sale => 
+                    sale.id === id 
+                        ? { ...sale, products: updateFields, total: total }
+                        : sale
+                )
+            );
+            return data;
+        } catch (error) {
+            throw error;
         }
-
-        // setSales(sales.filter(sale => sale.id !== id))
-        return (data)
-    }
+    };
 
     const deleteSale = async (id) => {
-        console.log(id)
         const { error } = await supabase.from('sales')
         .delete()
         .eq('user_id', user?.user_id)
@@ -84,17 +95,40 @@ export const SaleProvider = ({children}) => {
         if (error) {
             return error
         }
-
+        
         setSales(sales.filter(sale => sale.id !== id))
     }
+
+    const deleteSaleProduct = async (saleId, productId) => {
+        const currentSale = sales.find(sale => sale.id === saleId);
+        
+        if (!currentSale) {
+            return;
+        }
+
+        const updatedProduct = currentSale.products.filter(
+            producto => producto.id !== productId
+        );
+
+        if (updatedProduct.length === 0) {
+            await deleteSale(saleId);
+            return;
+        }
+
+        const newTotal = updatedProduct.reduce(
+            (sum, product) => sum + (product.unit_price * (product.amount || 1)), 
+            0
+        );
+
+        await updateSale(saleId, updatedProduct, newTotal);
+    };
 
     return (
         <SaleContext.Provider value={{
                 sales, 
                 getSales, 
                 createSale,
-                deleteSale,
-                updateSale
+                deleteSaleProduct
             }}>
             {children}
         </SaleContext.Provider>

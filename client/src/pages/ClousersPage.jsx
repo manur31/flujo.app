@@ -8,7 +8,6 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import { Link } from 'react-router'
 import { useClousing } from '../context/ClousingContext'
 import { useEffect, useState } from 'react'
 import Header from "../components/Header";
@@ -21,10 +20,6 @@ function ClousersPage() {
   useEffect(() => {
     getClousings()
   },[])
-
-  useEffect(() => {
-    console.log(clousings)
-  },[clousings])
 
   function groupData(data, range = "daily") {
     const grouped = {};
@@ -92,9 +87,9 @@ function ClousersPage() {
   const chartData = groupData(parsedData, range);
 
   return (
-    <main className='w-full h-dvh m-auto bg-white dark:bg-[#1E293B]'>
+    <main className='w-full h-dvh m-auto bg-[#1E293B]'>
       <Header/>
-      <div className="w-full flex flex-col items-center mt-10 px-4">
+      <div className="w-full flex flex-col items-center mt-6 px-4">
       {/* Filtros de tiempo */}
       <div className="flex gap-4 mb-10">
         {["daily", "weekly", "monthly"].map(r => (

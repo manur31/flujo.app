@@ -17,6 +17,18 @@ function FlujoGasto() {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
+        
+        if (name === '' || amount < 1 || unit_price === 0) {
+            toast.error('Error al registrar el gasto', {
+                    description: 'Debe llenar los campos obligatorios *',
+                    className: {
+                        title: 'title',
+                        description: 'description',
+                    }
+            })
+            return
+        }
+
         try {
             const result = await createExpense(name, unit_price, amount)
             if (!result) {
