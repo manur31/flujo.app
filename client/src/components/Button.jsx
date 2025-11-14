@@ -1,12 +1,12 @@
 import { useNavigate } from 'react-router'
 
-function Button({children, page, action=false, onclick, disabled}) {
+function Button({children, page, action=false, onclick=false, disabled=false}) {
     const navigate = useNavigate()
 
     const handleclick = () => {
       if (page) {
         navigate(page)
-      } else {
+      } else if (onclick) {
         onclick()
       }
     }
