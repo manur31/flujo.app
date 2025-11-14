@@ -229,16 +229,15 @@ y
         <section className={'overflow-scroll h-42'}>
             
             {Array.isArray(normalized) && normalized.map((transation, index) => (
-                <article className='grid grid-cols-[30px_1fr_50px_50px_10px] gap-1 mx-2 pl-4 pr-2 py-2 items-center border-b-2 border-[#3B82F6]' key={index}>
+                <article className='grid grid-cols-[30px_1fr_50px_50px_10px] gap-1 mx-2 pl-4 pr-2 py-2 items-center border-b-2 border-[#3B82F6]' key={index} onClick={() => {
+                        setOpenItem(!openItem); 
+                        setCurrentItem(transation)
+                    }}>
                     <p>{transation?.amount}</p>
                     <h3 className='truncate text-nowrap pr-2'>{transation?.name}</h3>
                     <p>{transation?.amount * transation?.unit_price}</p>
                     <p className='justify-self-end'>{transation?.type === 'expense' ? 'Gasto' : 'Ingreso'}</p>
-                    <FiMoreVertical className='justify-self-start' onClick={() => {
-                        setOpenItem(!openItem); 
-                        setCurrentItem(transation)
-                    }}/>
-                        
+                    <FiMoreVertical className='justify-self-start'/>
                 </article>
             ))}
 

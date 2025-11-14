@@ -19,8 +19,8 @@ function Header() {
                 <FiMenu/>
             </article>
         </section>
-        <article className={`bg-[#000000b9] ${isOpen ? 'flex' : 'hidden'} absolute left-0 top-0 w-full h-dvh`}>
-            <section className="flex flex-col gap-4 items-center pt-16 pb-8 px-10 bg-[#1E293B] w-full h-fit">
+        <article className={`bg-[#000000b9] ${isOpen ? 'flex' : 'hidden'} absolute left-0 top-0 w-full h-dvh`} onClick={() => setIsOpen(!isOpen)}>
+            <section className="flex flex-col gap-4 items-center pt-16 pb-20 px-10 bg-[#1E293B] w-full h-fit">
                 {session ? (
                         <article className="flex flex-col gap-4 items-center">
                             <Link to={'/profile'}>
@@ -42,8 +42,6 @@ function Header() {
                         </article>
                     )
                 }
-                
-                <div className='flex items-center justify-center h-48 w-full mt-4 bg-[#121e3b] rounded-2xl'>Anuncio</div>
             </section>
             <p className="absolute right-6 top-6 text-3xl uppercase font-bold" onClick={() => setIsOpen(!isOpen)}>
                 <FiX/>

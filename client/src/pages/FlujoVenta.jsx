@@ -118,7 +118,7 @@ function FlujoVenta() {
 
 
   return (
-    <main className="grid grid-rows-[60px_90px_1fr_50px] justify-center pt-8 pb-6 h-dvh w-full bg-[#1E293B] text-white">
+    <main className="grid grid-rows-[60px_90px_1fr_50px] justify-center pt-8 pb-6 px-4 h-dvh w-full bg-[#1E293B] text-white">
         <header className="relative w-full">
             <h2 className="text-4xl text-[#3B82F6] text-center font-bold">FlujoVenta</h2>
             <span className={`absolute top-0 right-0 ${sales.length === 0 ? 'hidden' : 'flex'} size-6 bg-white text-black items-center justify-center rounded-full`}>{sales.length}</span>
@@ -186,7 +186,7 @@ function FlujoVenta() {
         </div>
       </Dialog>
         </section>
-        <section className="grid grid-cols-1 gap-4 overflow-scroll h-96 my-2">
+        <section className="grid grid-cols-1 gap-4 overflow-scroll min-h-96 h-[95%] my-2">
             {products.length === 0 ? (
                 <article 
                         className="flex items-center w-full h-fit gap-3 border-4 border-[#3B82F6] rounded-xl px-6 py-4"
