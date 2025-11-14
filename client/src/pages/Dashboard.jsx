@@ -28,6 +28,8 @@ function Dashboard() {
     const [loading, setLoading] = useState(false)
     const [haveClouse, setHaveClouse] = useState(null)
     const [day, setDay] = useState('')
+    const [chartData, setChartData] = useState([])
+    const [isLoading, setIsLoading] = useState(false)
 
      useEffect(() => {
         getProducts()  
@@ -103,18 +105,27 @@ function Dashboard() {
         setLoading(false)
     },[sold, expenses, transations])
 
-    const chartData = [
-        {
-            name: 'Ingresos',
-            value: salesItems,
-            fill: '#06B6D4'
-        },
-        {
-            name: 'Gastos',
-            value: expensesItems,
-            fill: '#3B82F6'
-        }
-    ]
+    useEffect(() => {
+        setIsLoading(true)
+        const timer = setTimeout(() => {
+            const newData = [
+                {
+                    name: 'Ingresos',
+                    value: salesItems || 0,
+                    fill: '#06B6D4'
+                },
+                {
+                    name: 'Gastos',
+                    value: expensesItems || 0,
+                    fill: '#3B82F6'
+                }
+            ]
+            setChartData(newData);
+            setIsLoading(false);
+        }, 100); // Pequeño delay de 100ms
+
+        return () => clearTimeout(timer);
+    }, [salesItems, expensesItems]);
 
   return (
     <main className='bg-[#1E293B] text-white h-dvh'>
@@ -129,11 +140,30 @@ function Dashboard() {
                 }</p>
                 <p className='text-sm'>Total del dia</p>
                 <Link to={'/clousers'}>
-                    <div className=' absolute top-0 left-0 w-full h-full flex items-center justify-center'>
-                        <PieChart width={300} height={300}>
-                            <Pie data={chartData} dataKey='value' nameKey='name' cx='50%' cy='50%' outerRadius={85} innerRadius={70} fill='#06B6D4'/>
-                            <Tooltip/>
-                        </PieChart>
+                    <div className='absolute top-0 left-0 w-full h-full flex items-center justify-center'>
+                        {!isLoading ? (
+                            <PieChart width={300} height={300}>
+                                <Pie 
+                                    data={chartData} 
+                                    dataKey='value' 
+                                    nameKey='name' 
+                                    cx='50%' 
+                                    cy='50%' 
+                                    outerRadius={85} 
+                                    innerRadius={70} 
+                                    fill='#06B6D4'
+                                    isAnimationActive={true}
+                                    animationBegin={0}
+                                    animationDuration={350}
+                                    animationEasing="ease-in-out"          
+                                />
+                                <Tooltip/>
+                            </PieChart>
+                        ) : (
+                            <div className="flex items-center justify-center">
+                                <div className="animate-spin rounded-full size-40 border-b-4 border-cyan-500"></div>
+                            </div>
+                        )}
                     </div>
                 </Link>
             </section>
