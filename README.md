@@ -36,8 +36,8 @@ npm install
 touch .env
 
 # Agrega las siguientes variables:
-# VITE_SUPABASE_URL=
-# VITE_SUPABASE_ANON_KEY=
+VITE_SUPABASE_URL=
+VITE_SUPABASE_ANON_KEY=
 
 # Inicia el proyecto
 npm run dev
