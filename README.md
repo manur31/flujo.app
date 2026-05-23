@@ -26,7 +26,7 @@ Despliegue: Vercel
 📦 Instalación local
 
 # Clona el repositorio
-git clone https://github.com/tu-usuario/flujo.git
+git clone https://github.com/manur31/flujo.app.git
 cd flujo
 
 # Instala dependencias
@@ -36,8 +36,8 @@ npm install
 touch .env
 
 # Agrega las siguientes variables:
-VITE_SUPABASE_URL=
-VITE_SUPABASE_ANON_KEY=
+VITE_SUPABASE_URL=https://fwdoirpqrjlcdtzgueza.supabase.co
+VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ3ZG9pcnBxcmpsY2R0emd1ZXphIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc4MDI4NjMsImV4cCI6MjA3MzM3ODg2M30.UN_Cvr2DTWp4q9Rxc2bOzOl45ULWNhNEtId4cbtH98A
 
 # Inicia el proyecto
 npm run dev
